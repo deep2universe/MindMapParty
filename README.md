@@ -23,7 +23,7 @@ Define a topic and provide guidance for the AI.
 View the mind map as markdown.  
 To explore an interactive mind map, copy the link and open it in a new tab where you can zoom, click, and collapse nodes.
 ![Image](assets/img_8.png)
-_If you end up on a search engine after entering the link (because you normally use the address bar for searches), then remove the first space in the link (before 'http')._  
+_If you end up on a search engine after entering the link (because you normally use the address bar for searches), then remove the first space in the link (before 'http'). Or, more simply, select the link manually and then copy it._  
 
 You will receive an interactive mind map.
 
