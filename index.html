@@ -60,13 +60,12 @@
        markdownContent = markdownContent.replace(/^\s+/, '');
 
         let lines = markdownContent.split('\n');
-        lines = lines.map((line, index) => {
+        markdownContent = lines.map((line, index) => {
             if (index === 0) {
                 return line.startsWith('# ') ? line : `# ${line}`;
             }
-            // check if line starts with only text in first column. if so, add a '# ' to the beginning of the line.
-        });
-        markdownContent = lines.join('\n');
+            return /^[A-Za-z]/.test(line) ? '## ' + line : line;
+        }).join('\n');
 
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
         markdownContent = markmapFrontmatter + markdownContent;
