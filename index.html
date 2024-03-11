@@ -55,8 +55,15 @@
     }
     const base64String = getBase64Param();
     if (base64String) {
+       let markdownContent = atob(base64String);
+       // Remove leading spaces from the first line
+       markdownContent = markdownContent.replace(/^\s+/, '');
+       // Ensure the first line starts with a '# '
+       if (!markdownContent.startsWith('#')) {
+           markdownContent = '# ' + markdownContent;
+       }
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
-        const markdownContent = markmapFrontmatter + atob(base64String);
+        markdownContent = markmapFrontmatter + markdownContent;
         const scriptElement = document.createElement('script');
         scriptElement.type = 'text/template';
         scriptElement.textContent = markdownContent;
