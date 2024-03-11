@@ -58,10 +58,16 @@
        let markdownContent = atob(base64String);
        // Remove leading spaces from the first line
        markdownContent = markdownContent.replace(/^\s+/, '');
-       // Ensure the first line starts with a '# '
-       if (!markdownContent.startsWith('#')) {
-           markdownContent = '# ' + markdownContent;
-       }
+
+        let lines = markdownContent.split('\n');
+        lines = lines.map((line, index) => {
+            if (index === 0) {
+                return line.startsWith('# ') ? line : `# ${line}`;
+            }
+            // check if line starts with only text in first column. if so, add a '# ' to the beginning of the line.
+        });
+        markdownContent = lines.join('\n');
+
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
         markdownContent = markmapFrontmatter + markdownContent;
         const scriptElement = document.createElement('script');
