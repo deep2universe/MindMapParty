@@ -60,6 +60,7 @@
        markdownContent = markdownContent.replace(/^\s+/, '');
 
         let lines = markdownContent.split('\n').filter(line => line.trim() !== '-');
+        lines = lines.filter(line => line.trim() !== '');
         markdownContent = lines.map((line, index) => {
             if (index === 0 && !line.startsWith('# ')) {
                 return `# ${line}`;
