@@ -63,9 +63,11 @@
         markdownContent = lines.map((line, index) => {
             if (index === 0 && !line.startsWith('# ')) {
                 return `# ${line}`;
-            }
-            return /^[A-Za-z]/.test(line) ? `## ${line}` : line;
-        }).join('\n');
+            } else if (line.startsWith('*')) {
+                return `- ${line.substring(1)}`;
+            } else {
+                 }
+         }).join('\n');
 
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
         markdownContent = markmapFrontmatter + markdownContent;
