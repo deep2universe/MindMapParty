@@ -99,23 +99,18 @@
         }
 
         markdownContent = ensureMarkdownStructure(lines).join('\n');
-        console.log(markdownContent);
+
         if (!markdownContent.startsWith('#')) {
             markdownContent = "# --->\n" + markdownContent;
         }
 
-        console.log("........");
-        console.log(markdownContent);
-
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
         markdownContent = markmapFrontmatter + markdownContent;
-        // This regex replaces "** " with "**" to correct bold markdown syntax
-        markdownContent = markdownContent.replace(/\*\*\s/g, '**')
-            // This regex ensures that there is a space after "#" in headings
-            .replace(/(^|\n)#([^\s])/g, '$1# $2')
-            // This regex replaces "# #" with "##" to correct heading level 2 markdown syntax
-            .replace(/# #/g, '##');
-        console.log(markdownContent);
+
+        markdownContent = markdownContent.replace(/\*\*\s/g, '**') // regex replaces "** " with "**" to correct bold markdown syntax
+            .replace(/(^|\n)#([^\s])/g, '$1# $2') // regex ensures that there is a space after "#" in headings
+            .replace(/# #/g, '##');// replaces "# #" with "##" to correct heading level 2 markdown syntax
+
         const scriptElement = document.createElement('script');
         scriptElement.type = 'text/template';
         scriptElement.textContent = markdownContent;
