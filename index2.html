@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>PartyRock Mindmap</title>
     <style>
         svg.markmap {
@@ -11,22 +11,23 @@
             height: 100vh;
         }
     </style>
-<style>
-    svg.markmap {
-        width: 100%;
-        height: 100vh;
-    }
-    #inputForm {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        background-color: white;
-        z-index: 1000;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-</style>
+    <style>
+        svg.markmap {
+            width: 100%;
+            height: 100vh;
+        }
+
+        #inputForm {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            z-index: 1000;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
 <div class="markmap">
@@ -42,7 +43,7 @@
 </div>
 </body>
 <script>
-    document.getElementById('markdownForm').onsubmit = function(event) {
+    document.getElementById('markdownForm').onsubmit = function (event) {
         event.preventDefault();
         const text = document.getElementById('markdownText').value;
         const base64Encoded = btoa(text);
@@ -53,18 +54,18 @@
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('base64');
     }
+
     const base64String = getBase64Param();
     if (base64String) {
-       let markdownContent = atob(base64String)
-        .replace(/<content-for-base64>/g, '')
-        .replace(/<\/content-for-base64>/g, '')
-        .replace(/[\s\S]*?(# [a-zA-Z0-9 ]+)/, '$1');
-       // Remove leading spaces from the first line
-       markdownContent = markdownContent.replace(/^\s+/, '');
+        let markdownContent = atob(base64String)
+            .replace(/<content-for-base64>/g, '')
+            .replace(/<\/content-for-base64>/g, '')
+            .replace(/[\s\S]*?(# [a-zA-Z0-9 ]+)/, '$1');
+        // Remove leading spaces from the first line
+        markdownContent = markdownContent.replace(/^\s+/, '');
 
-       // Add newline before each "#", "-", "##", "###", "####" if no newline is present
-       // This regex checks for headings or list items that are not preceded by a newline and adds a newline before them
-       markdownContent = markdownContent.replace(/(?<!\n)(#|##|###|####|-)/g, '\n$1');
+        // Add newline before each "#", "-", "##", "###", "####" if no newline is present
+        markdownContent = markdownContent.replace(/(?<!\n)(#|##|###|####|-)/g, '\n$1');
 
         let lines = markdownContent.split('\n').filter(line => !line.match(/^(\*{1,2}|-|#)\s*$/));
         lines = lines.filter(line => line.trim() !== '');
@@ -76,28 +77,28 @@
             } else {
                 return /^[A-Za-z]/.test(line) ? `## ${line}` : line;
             }
-           line = line.replace(/<h1>/gi, '# ').replace(/<\/h1>/gi, '').replace(/\[\*/g, '*').replace(/\*\]/g, '*');
-         }).join('\n');
+            line = line.replace(/<h1>/gi, '# ').replace(/<\/h1>/gi, '').replace(/\[\*/g, '*').replace(/\*\]/g, '*');
+        }).join('\n');
 
-       function ensureMarkdownStructure(markdownLines) {
-               let hasMainTopic = false;
-               return markdownLines.map(line => {
-                       if (line.startsWith('# ') && !hasMainTopic) {
-                               hasMainTopic = true; // First main topic
-                               return line;
-                           } else if (line.startsWith('# ')) {
-                               return `## ${line.substring(2)}`; // Convert to subtopic
-        } else if (/^[A-Za-z0-9]/.test(line)) {
-            // This regex checks if a line starts with a letter or number and prepends "- " to the line
-            return `- ${line}`; // Prepend "- " if line starts with a string or number
-                           }
-                       return line;
-                  });
-           }
-       markdownContent = ensureMarkdownStructure(lines).join('\n');
+        function ensureMarkdownStructure(markdownLines) {
+            let hasMainTopic = false;
+            return markdownLines.map(line => {
+                if (line.startsWith('# ') && !hasMainTopic) {
+                    hasMainTopic = true; // First main topic
+                    return line;
+                } else if (line.startsWith('# ')) {
+                    return `## ${line.substring(2)}`; // Convert to subtopic
+                } else if (/^[A-Za-z0-9]/.test(line)) { // This regex checks if a line starts with a letter or number and prepends "- " to the line
+                    return `- ${line}`;
+                }
+                return line;
+            });
+        }
+
+        markdownContent = ensureMarkdownStructure(lines).join('\n');
         console.log(markdownContent);
         if (!markdownContent.startsWith('#')) {
-          markdownContent = "# --->\n" + markdownContent;
+            markdownContent = "# --->\n" + markdownContent;
         }
 
         console.log("........");
@@ -106,11 +107,11 @@
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
         markdownContent = markmapFrontmatter + markdownContent;
         // This regex replaces "** " with "**" to correct bold markdown syntax
-       markdownContent = markdownContent.replace(/\*\*\s/g, '**')
-       // This regex ensures that there is a space after "#" in headings
-                                         .replace(/(^|\n)#([^\s])/g, '$1# $2')
-       // This regex replaces "# #" with "##" to correct heading level 2 markdown syntax
-                                        .replace(/# #/g, '##');
+        markdownContent = markdownContent.replace(/\*\*\s/g, '**')
+            // This regex ensures that there is a space after "#" in headings
+            .replace(/(^|\n)#([^\s])/g, '$1# $2')
+            // This regex replaces "# #" with "##" to correct heading level 2 markdown syntax
+            .replace(/# #/g, '##');
         console.log(markdownContent);
         const scriptElement = document.createElement('script');
         scriptElement.type = 'text/template';
