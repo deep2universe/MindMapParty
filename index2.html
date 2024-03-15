@@ -68,7 +68,7 @@
             } else {
                 return /^[A-Za-z]/.test(line) ? `## ${line}` : line;
             }
-           line = line.replace(/<h1>/gi, '# ').replace(/<\/h1>/gi, '');
+           line = line.replace(/<h1>/gi, '# ').replace(/<\/h1>/gi, '').replace(/\[\*/g, '*').replace(/\*\]/g, '*');
          }).join('\n');
 
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
