@@ -63,6 +63,7 @@
        markdownContent = markdownContent.replace(/^\s+/, '');
 
        // Add newline before each "#", "-", "##", "###", "####" if no newline is present
+       // This regex checks for headings or list items that are not preceded by a newline and adds a newline before them
        markdownContent = markdownContent.replace(/(?<!\n)(#|##|###|####|-)/g, '\n$1');
 
         let lines = markdownContent.split('\n').filter(line => !line.match(/^(\*{1,2}|-|#)\s*$/));
@@ -87,6 +88,7 @@
                            } else if (line.startsWith('# ')) {
                                return `## ${line.substring(2)}`; // Convert to subtopic
         } else if (/^[A-Za-z0-9]/.test(line)) {
+            // This regex checks if a line starts with a letter or number and prepends "- " to the line
             return `- ${line}`; // Prepend "- " if line starts with a string or number
                            }
                        return line;
@@ -103,8 +105,11 @@
 
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
         markdownContent = markmapFrontmatter + markdownContent;
+        // This regex replaces "** " with "**" to correct bold markdown syntax
        markdownContent = markdownContent.replace(/\*\*\s/g, '**')
+       // This regex ensures that there is a space after "#" in headings
                                          .replace(/(^|\n)#([^\s])/g, '$1# $2')
+       // This regex replaces "# #" with "##" to correct heading level 2 markdown syntax
                                         .replace(/# #/g, '##');
         console.log(markdownContent);
         const scriptElement = document.createElement('script');
