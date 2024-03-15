@@ -62,6 +62,9 @@
        // Remove leading spaces from the first line
        markdownContent = markdownContent.replace(/^\s+/, '');
 
+       // Add newline before each "#", "-", "##", "###", "####" if no newline is present
+       markdownContent = markdownContent.replace(/(?<!\n)(#|##|###|####|-)/g, '\n$1');
+
         let lines = markdownContent.split('\n').filter(line => line.trim() !== '-');
         lines = lines.filter(line => line.trim() !== '');
         markdownContent = lines.map((line, index) => {
