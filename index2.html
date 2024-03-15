@@ -65,7 +65,7 @@
        // Add newline before each "#", "-", "##", "###", "####" if no newline is present
        markdownContent = markdownContent.replace(/(?<!\n)(#|##|###|####|-)/g, '\n$1');
 
-        let lines = markdownContent.split('\n').filter(line => line.trim() !== '-');
+        let lines = markdownContent.split('\n').filter(line => !line.match(/^(\*{1,2}|-|#)\s*$/));
         lines = lines.filter(line => line.trim() !== '');
         markdownContent = lines.map((line, index) => {
             if (index === 0 && !line.startsWith('# ')) {
