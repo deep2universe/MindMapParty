@@ -91,11 +91,13 @@
                   });
            }
        markdownContent = ensureMarkdownStructure(lines).join('\n');
-
-        // Check if the final markdown starts with "#" and add "# --->" if not
+        console.log(markdownContent);
         if (!markdownContent.startsWith('#')) {
           markdownContent = "# --->\n" + markdownContent;
         }
+
+        console.log("........");
+        console.log(markdownContent);
 
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
         markdownContent = markmapFrontmatter + markdownContent;
