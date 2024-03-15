@@ -61,7 +61,6 @@
         .replace(/[\s\S]*?(# [a-zA-Z0-9 ]+)/, '$1');
        // Remove leading spaces from the first line
        markdownContent = markdownContent.replace(/^\s+/, '');
-       console.log(markdownContent);
 
         let lines = markdownContent.split('\n').filter(line => line.trim() !== '-');
         lines = lines.filter(line => line.trim() !== '');
@@ -75,6 +74,20 @@
             }
            line = line.replace(/<h1>/gi, '# ').replace(/<\/h1>/gi, '').replace(/\[\*/g, '*').replace(/\*\]/g, '*');
          }).join('\n');
+
+       function ensureMarkdownStructure(markdownLines) {
+               let hasMainTopic = false;
+               return markdownLines.map(line => {
+                       if (line.startsWith('# ') && !hasMainTopic) {
+                               hasMainTopic = true; // First main topic
+                               return line;
+                           } else if (line.startsWith('# ')) {
+                               return `## ${line.substring(2)}`; // Convert to subtopic
+                           }
+                       return line;
+                  });
+           }
+       markdownContent = ensureMarkdownStructure(lines).join('\n');
 
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
         markdownContent = markmapFrontmatter + markdownContent;
