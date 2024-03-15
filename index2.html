@@ -56,7 +56,10 @@
     const base64String = getBase64Param();
     console.log(base64String);
     if (base64String) {
-       let markdownContent = atob(base64String).replace(/<content>/, '').replace(/[\s\S]*?(# [a-zA-Z0-9 ]+)/, '$1');
+       let markdownContent = atob(base64String)
+        .replace(/<content-for-base64>/g, '')
+        .replace(/<\/content-for-base64>/g, '')
+        .replace(/[\s\S]*?(# [a-zA-Z0-9 ]+)/, '$1');
        // Remove leading spaces from the first line
        markdownContent = markdownContent.replace(/^\s+/, '');
 
