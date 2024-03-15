@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PartyRock Mindmap</title>
+    <style>
+        svg.markmap {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+<style>
+    svg.markmap {
+        width: 100%;
+        height: 100vh;
+    }
+    #inputForm {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: white;
+        z-index: 1000;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+</style>
+</head>
+<body>
+<div class="markmap">
+</div>
+<div id="inputForm" style="display:none;">
+    <h2>Create Your Mindmap</h2>
+    <p>Enter your markdown content from <b>PartyRock</b> below:</p>
+    <form id="markdownForm">
+        <textarea id="markdownText" style="width:100%; height:580px; overflow:auto;"></textarea>
+        <br>
+        <input type="submit" value="Generate Mindmap">
+    </form>
+</div>
+</body>
+<script>
+    document.getElementById('markdownForm').onsubmit = function(event) {
+        event.preventDefault();
+        const text = document.getElementById('markdownText').value;
+        const base64Encoded = btoa(text);
+        window.location.search = '?base64=' + base64Encoded;
+    };
+
+    function getBase64Param() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('base64');
+    }
+    const base64String = getBase64Param();
+    if (base64String) {
+       let markdownContent = atob(base64String).replace(/[\s\S]*?(# [a-zA-Z0-9 ]+)/, '$1');
+       // Remove leading spaces from the first line
+       markdownContent = markdownContent.replace(/^\s+/, '');
+
+        let lines = markdownContent.split('\n');
+        markdownContent = lines.map((line, index) => {
+            if (index === 0) {
+                return line.startsWith('# ') ? line : `# ${line}`;
+            }
+            return /^[A-Za-z]/.test(line) ? '## ' + line : line;
+        }).join('\n');
+
+        const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
+        markdownContent = markmapFrontmatter + markdownContent;
+        const scriptElement = document.createElement('script');
+        scriptElement.type = 'text/template';
+        scriptElement.textContent = markdownContent;
+        const markmap_div = document.getElementsByClassName("markmap");
+        markmap_div[0].appendChild(scriptElement);
+    } else {
+        document.getElementById('inputForm').style.display = 'block';
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.16"></script>
+</html>
