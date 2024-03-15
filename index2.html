@@ -54,6 +54,7 @@
         return urlParams.get('base64');
     }
     const base64String = getBase64Param();
+    console.log(base64String);
     if (base64String) {
        let markdownContent = atob(base64String).replace(/<content>/, '').replace(/[\s\S]*?(# [a-zA-Z0-9 ]+)/, '$1');
        // Remove leading spaces from the first line
@@ -74,6 +75,7 @@
 
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
         markdownContent = markmapFrontmatter + markdownContent;
+        console.log(markdownContent);
         const scriptElement = document.createElement('script');
         scriptElement.type = 'text/template';
         scriptElement.textContent = markdownContent;
