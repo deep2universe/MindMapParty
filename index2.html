@@ -59,12 +59,12 @@
        // Remove leading spaces from the first line
        markdownContent = markdownContent.replace(/^\s+/, '');
 
-        let lines = markdownContent.split('\n');
+        let lines = markdownContent.split('\n').filter(line => line.trim() !== '-');
         markdownContent = lines.map((line, index) => {
-            if (index === 0) {
-                return line.startsWith('# ') ? line : `# ${line}`;
+            if (index === 0 && !line.startsWith('# ')) {
+                return `# ${line}`;
             }
-            return /^[A-Za-z]/.test(line) ? '## ' + line : line;
+            return /^[A-Za-z]/.test(line) ? `## ${line}` : line;
         }).join('\n');
 
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
