@@ -91,7 +91,7 @@
 
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
         markdownContent = markmapFrontmatter + markdownContent;
-       markdownContent = markdownContent.replace(/\*\*\s/g, '**');
+       markdownContent = markdownContent.replace(/\*\*\s/g, '**').replace(/\s\*\*/g, '**');
         console.log(markdownContent);
         const scriptElement = document.createElement('script');
         scriptElement.type = 'text/template';
