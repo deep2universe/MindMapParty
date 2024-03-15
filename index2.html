@@ -81,6 +81,9 @@
         }).join('\n');
 
         function ensureMarkdownStructure(markdownLines) {
+            // This function adjusts the structure of the markdown content.
+            // It ensures the first heading starts with "# " and subsequent headings are converted to subtopics with "## ".
+            // It also prepends "- " to lines starting with a letter or number that are not already part of a list or heading.
             let hasMainTopic = false;
             return markdownLines.map(line => {
                 if (line.startsWith('# ') && !hasMainTopic) {
