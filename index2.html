@@ -94,9 +94,6 @@
             let hasMainTopic = false;
             let previousLine = "";
             return markdownLines.map((line, index) => {
-
-                const trimmedLine = line.trimStart();
-
                 const trimmedLine = line.trimStart();
                 // Check if the line is a main topic heading and mark it as found
                 if (trimmedLine.startsWith('# ') && !hasMainTopic) {
