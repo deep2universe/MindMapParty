@@ -86,20 +86,29 @@
 
 
         function ensureMarkdownStructure(markdownLines) {
+            // The ensureMarkdownStructure function processes an array of markdown lines.
+            // Its purpose is to ensure that the markdown content has a proper structure
+            // for rendering a mind map. It checks for the presence of main topics, subtopics,
+            // and list items, and adjusts the heading levels accordingly. It also ensures
+            // that list items are correctly formatted and placed under the right headings.
             let hasMainTopic = false;
             let previousLine = "";
             return markdownLines.map((line, index) => {
 
                 const trimmedLine = line.trimStart();
 
+                const trimmedLine = line.trimStart();
+                // Check if the line is a main topic heading and mark it as found
                 if (trimmedLine.startsWith('# ') && !hasMainTopic) {
                     hasMainTopic = true;
                     previousLine = line;
                     return line;
+                // Convert top-level headings to second-level if a main topic already exists
                 } else if (trimmedLine.startsWith('# ')) {
                     const currentLine = `## ${trimmedLine.substring(2)}`
                     previousLine = currentLine;
                     return currentLine;
+                // Format list items correctly, ensuring they are placed under the right headings
                 } else if (trimmedLine.startsWith('-')) {
                     const prevTrimmed = previousLine.trimStart();
                     if (!prevTrimmed.startsWith('-') && !prevTrimmed.startsWith('#')) {
@@ -109,6 +118,7 @@
                             return currentLine;
                         }
                     }
+                // Adjust the heading level for lines that are not list items or main topic headings
                 } else{
                     if (/^[A-Za-z0-9]/.test(trimmedLine)) {
                         if (previousLine.trimStart().startsWith('###')){
