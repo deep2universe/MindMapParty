@@ -99,6 +99,7 @@
                 // remove <b> and <strong>
                 line = line.replace(/<b>(.*?)<\/b>/g, '**$1**');
                 line = line.replace(/<strong>(.*?)<\/strong>/g, '**$1**');
+                // Remove any remaining HTML tags from the line
                 //
                 line = line.replace(/<[^>]+>/g, '');
 
