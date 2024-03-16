@@ -91,23 +91,24 @@
                 line = line.replace(/<h2>(.*?)<\/h2>/g, '## $1');
                 line = line.replace(/<h3>(.*?)<\/h3>/g, '### $1');
                 line = line.replace(/<h4>(.*?)<\/h4>/g, '### $1');
-                // remove <ul> and <li>
+                // Remove <ul> and <li>
                 line = line.replace(/<ul>/g, '');
                 line = line.replace(/<\/ul>/g, '');
                 line = line.replace(/<li>/g, '- ');
                 line = line.replace(/<\/li>/g, '');
-                // remove <b> and <strong>
+                // Remove <b> and <strong>
                 line = line.replace(/<b>(.*?)<\/b>/g, '**$1**');
                 line = line.replace(/<strong>(.*?)<\/strong>/g, '**$1**');
+                line = line.replace(/<em>(.*?)<\/em>/g, '**$1**');
                 // Remove any remaining HTML tags from the line
-                //
                 line = line.replace(/<[^>]+>/g, '');
 
                 return line;
             }).filter(line => line.trim() !== ''); // Remove empty lines
         }
 
-        markdownContent = convertHtmlToMarkdown(markdownContent.split('\n'));
+        markdownContent = convertHtmlToMarkdown(markdownContent.split('\n')).join('\n');
+
 
         function ensureMarkdownStructure(markdownLines) {
             // The ensureMarkdownStructure function processes an array of markdown lines.
