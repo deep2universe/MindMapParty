@@ -81,18 +81,41 @@
             } else {
                 return line;
             }
-            line = line.replace(/<h1>/gi, '# ').replace(/<\/h1>/gi, '').replace(/\[\*/g, '*').replace(/\*\]/g, '*');
+            line = line.replace(/\[\*/g, '*').replace(/\*\]/g, '*');
         }).join('\n');
 
+        function convertHtmlToMarkdown(markdownLines) {
+            return markdownLines.map(line => {
+                // Convert HTML tags to Markdown
+                line = line.replace(/<h1>(.*?)<\/h1>/g, '# $1');
+                line = line.replace(/<h2>(.*?)<\/h2>/g, '## $1');
+                line = line.replace(/<h3>(.*?)<\/h3>/g, '### $1');
+                line = line.replace(/<h4>(.*?)<\/h4>/g, '### $1');
+                // remove <ul> and <li>
+                line = line.replace(/<ul>/g, '');
+                line = line.replace(/<\/ul>/g, '');
+                line = line.replace(/<li>/g, '- ');
+                line = line.replace(/<\/li>/g, '');
+                // remove <b> and <strong>
+                line = line.replace(/<b>(.*?)<\/b>/g, '**$1**');
+                line = line.replace(/<strong>(.*?)<\/strong>/g, '**$1**');
+                //
+                line = line.replace(/<[^>]+>/g, '');
+
+                return line;
+            }).filter(line => line.trim() !== ''); // Remove empty lines
+        }
+
+        markdownContent = convertHtmlToMarkdown(markdownContent.split('\n'));
 
         function ensureMarkdownStructure(markdownLines) {
             // The ensureMarkdownStructure function processes an array of markdown lines.
             // Its purpose is to ensure that the markdown content has a proper structure
             // for rendering a mind map. It checks for the presence of main topics, subtopics,
-            // and list items, and adjusts the heading levels accordingly. It also ensures
-            // that list items are correctly formatted and placed under the right headings.
+            // and list items, and adjusts the heading levels accordingly.
             let hasMainTopic = false;
             let previousLine = "";
+            let previousHeadingLevel = 0; // Track the previous heading level
             return markdownLines.map((line, index) => {
                 const trimmedLine = line.trimStart();
                 // Check if the line is a main topic heading and mark it as found
@@ -118,15 +141,19 @@
                 // Adjust the heading level for lines that are not list items or main topic headings
                 } else{
                     if (/^[A-Za-z0-9]/.test(trimmedLine)) {
-                        if (previousLine.trimStart().startsWith('###')){
+                        if (previousLine.trimStart().startsWith('#####')){
+                            const currentLine = `###### ${trimmedLine}`;
+                            previousLine = currentLine;
+                            return currentLine;
+                        }else if (previousLine.trimStart().startsWith('####')){
+                            const currentLine = `##### ${trimmedLine}`;
+                            previousLine = currentLine;
+                            return currentLine;
+                        }else if (previousLine.trimStart().startsWith('###')){
                             const currentLine = `#### ${trimmedLine}`;
                             previousLine = currentLine;
                             return currentLine;
-                        } else if (previousLine.trimStart().startsWith('###')){
-                            const currentLine = `#### ${trimmedLine}`;
-                            previousLine = currentLine;
-                            return currentLine;
-                        } else if (previousLine.trimStart().startsWith('##')){
+                        }  else if (previousLine.trimStart().startsWith('##')){
                             const currentLine = `### ${trimmedLine}`;
                             previousLine = currentLine;
                             return currentLine;
