@@ -70,43 +70,93 @@
         let lines = markdownContent.split('\n').filter(line => !line.match(/^(\*{1,2}|-|#)\s*$/));
         lines = lines.filter(line => line.trim() !== '');
         markdownContent = lines.map((line, index) => {
+            console.log(index);
+            console.log(line);
             if (index === 0 && !line.startsWith('# ')) {
+                console.log("--1")
                 return `# ${line}`;
             } else if (line.startsWith('*')) {
+                console.log("--2")
                 return `- ${line.substring(1)}`;
            } else if (!/^[A-Za-z]/.test(line) && !line.trim()) {
+                console.log("--3")
                return ''; // Remove lines that contain only non-alphabetic characters
            } else if (/^[A-Za-z]/.test(line)) {
+                console.log("--4")
                return `## ${line}`; // Add "## " to lines starting with an alphabetic character
             } else {
+                console.log("--5")
                 return line;
             }
             line = line.replace(/<h1>/gi, '# ').replace(/<\/h1>/gi, '').replace(/\[\*/g, '*').replace(/\*\]/g, '*');
         }).join('\n');
 
+        console.log("############");
+        console.log(markdownContent);
+        console.log("############");
+
         function ensureMarkdownStructure(markdownLines) {
-            // This function adjusts the structure of the markdown content.
-            // It ensures the first heading starts with "# " and subsequent headings are converted to subtopics with "## ".
-            // It also prepends "- " to lines starting with a letter or number that are not already part of a list or heading.
+            console.log(markdownLines);
             let hasMainTopic = false;
-            return markdownLines.map(line => {
-                if (line.startsWith('# ') && !hasMainTopic) {
-                    hasMainTopic = true; // First main topic
+            let previousLine = "";
+            return markdownLines.map((line, index) => {
+
+                const trimmedLine = line.trimStart();
+
+                if (trimmedLine.startsWith('# ') && !hasMainTopic) {
+                    hasMainTopic = true;
+                    previousLine = line;
                     return line;
-                } else if (line.startsWith('# ')) {
-                    return `## ${line.substring(2)}`; // Convert to subtopic
-                } else if (/^[A-Za-z0-9]/.test(line)) { // This regex checks if a line starts with a letter or number and prepends "- " to the line
-                    return `- ${line}`;
+                } else if (trimmedLine.startsWith('# ')) {
+                    const currentLine = `## ${trimmedLine.substring(2)}`
+                    previousLine = currentLine;
+                    return currentLine;
+                } else if (trimmedLine.startsWith('-')) {
+                    const prevTrimmed = previousLine.trimStart();
+                    if (!prevTrimmed.startsWith('-') && !prevTrimmed.startsWith('#')) {
+                        if (index > 0) {
+                            const currentLine = `- ${trimmedLine}`
+                            previousLine = currentLine;
+                            return currentLine;
+                        }
+                    }
+                } else{
+                    if (/^[A-Za-z0-9]/.test(trimmedLine)) {
+                        if (previousLine.trimStart().startsWith('###')){
+                            const currentLine = `#### ${trimmedLine}`;
+                            previousLine = currentLine;
+                            return currentLine;
+                        } else if (previousLine.trimStart().startsWith('###')){
+                            const currentLine = `#### ${trimmedLine}`;
+                            previousLine = currentLine;
+                            return currentLine;
+                        } else if (previousLine.trimStart().startsWith('##')){
+                            const currentLine = `### ${trimmedLine}`;
+                            previousLine = currentLine;
+                            return currentLine;
+                        } else if(previousLine.trimStart().startsWith('#')){
+                            const currentLine = `## ${trimmedLine}`;
+                            previousLine = currentLine;
+                            return currentLine;
+                        } else if (previousLine.trimStart().startsWith('-')) {
+                            const currentLine = `- ${line}`;
+                            previousLine = currentLine;
+                            return currentLine;
+                        }
+                    }
                 }
+                previousLine = line;
                 return line;
             });
         }
 
-        markdownContent = ensureMarkdownStructure(lines).join('\n');
+        markdownContent = ensureMarkdownStructure(markdownContent.split('\n')).join('\n');
 
         if (!markdownContent.startsWith('#')) {
             markdownContent = "# --->\n" + markdownContent;
         }
+
+        console.log(markdownContent)
 
         const markmapFrontmatter = "---\nmarkmap:\n  maxWidth: 380\n  colorFreezeLevel: 2\n---\n";
         markdownContent = markmapFrontmatter + markdownContent;
